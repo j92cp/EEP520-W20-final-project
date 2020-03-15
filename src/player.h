@@ -20,8 +20,8 @@ class PlayerController : public Process, public AgentInterface {
                 x() + 17*cos(angle()), 
                 y() + 17*sin(angle()), 
                 angle(), 
-                BULLET_STYLE);    
-                bullet.apply_force(50,0);
+                BULLET_STYLE);  
+                bullet.apply_force(200,0);
                 firing = true;
             } else if ( k == "w" ) {
                   f = -magnitude;              
@@ -45,8 +45,8 @@ class PlayerController : public Process, public AgentInterface {
                   RIGHT = false;
             } 
         });
-        center(x(), y());
-        zoom(2);
+        //center(x(), y());
+        zoom(1.5);
     }
     void start() { }
     void update() {
@@ -72,7 +72,7 @@ class PlayerController : public Process, public AgentInterface {
     const double K_X = 15;
 
     double f;
-    double const magnitude = 300;
+    double const magnitude = 250;
     bool firing;
     const json BULLET_STYLE = { 
                    {"fill", "green"}, 
