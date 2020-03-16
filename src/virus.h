@@ -52,6 +52,7 @@ class VirusController : public Process, public AgentInterface {
     const int fmax = 100.0;
     int host_id;
     int counter;
+    double goal_x, goal_y;
 
     const json INFECTED_HOST_STYLE = { 
                    {"fill", "lightgreen"}, 
@@ -64,7 +65,8 @@ class VirusController : public Process, public AgentInterface {
                    {"stroke", "black"}, 
                    {"strokeWidth", "10px"},
                    {"strokeOpacity", "0.25"}
-               };            
+               };
+                
 
 };
 

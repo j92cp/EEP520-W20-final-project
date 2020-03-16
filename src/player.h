@@ -15,19 +15,12 @@ class PlayerController : public Process, public AgentInterface {
         watch("keydown", [&](Event &e) {
             auto k = e.value()["key"].get<std::string>();
             if ( k == "p" && !firing ) {
-                prevent_rotation();
-                Agent& bullet = add_agent("Bullet", 
-                x() + 17*cos(angle()), 
-                y() + 17*sin(angle()), 
-                angle(), 
-                BULLET_STYLE);  
-                bullet.apply_force(200,0);
                 firing = true;
             } else if ( k == "w" ) {
                   f = -magnitude;              
             } else if ( k == "s" ) {
                   f = magnitude;  
-            } else if ( k == "a" ) {
+            } else if ( k == "a" ) {//instead of rotation, the lateral movement of the platformer example was refactored here
                   LEFT = true;
             } else if ( k == "d" ) {
                   RIGHT = true;
@@ -45,10 +38,10 @@ class PlayerController : public Process, public AgentInterface {
                   RIGHT = false;
             } 
         });
-        //center(x(), y());
-        zoom(1.5);
+
+        zoom(1);
     }
-    void start() { }
+    void start() {}
     void update() {
         double fx;
         if ( RIGHT ) {
@@ -60,6 +53,17 @@ class PlayerController : public Process, public AgentInterface {
         }
         fx = -K_X*(velocity().x-vx);
 
+        if ( firing ) {
+            prevent_rotation();
+            Agent& bullet = add_agent("Bullet", 
+            x() + 17*cos(angle()), 
+            y() + 17*sin(angle()), 
+            angle(), 
+            BULLET_STYLE);  
+            bullet.apply_force(200,0);
+        }
+            
+
         omni_apply_force(fx,f);
         center(x(), y());
     }
@@ -68,7 +72,7 @@ class PlayerController : public Process, public AgentInterface {
     bool LEFT, RIGHT;
     double vx;
 
-    const double VEL_X = 20;
+    const double VEL_X = 40;
     const double K_X = 15;
 
     double f;
