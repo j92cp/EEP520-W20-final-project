@@ -11,6 +11,7 @@ class BulletController : public Process, public AgentInterface {
     BulletController() : Process(), AgentInterface(), counter(0) {}
 
     void init() {
+        void prevent_rotation();
         notice_collisions_with("Virus", [&](Event &e) {
             remove_agent(e.value()["id"]);
             remove_agent(id());

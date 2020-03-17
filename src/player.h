@@ -20,9 +20,9 @@ class PlayerController : public Process, public AgentInterface {
                   f = -magnitude;              
             } else if ( k == "s" ) {
                   f = magnitude;  
-            } else if ( k == "a" ) {//instead of rotation, the lateral movement of the platformer example was refactored here
+            } else if ( k == "a" ) {//instead of rotation, the player agent moves laterally
                   LEFT = true;
-            } else if ( k == "d" ) {
+            } else if ( k == "d" ) {//this movement was refactored from the platformer example
                   RIGHT = true;
             } 
         });        
@@ -39,9 +39,17 @@ class PlayerController : public Process, public AgentInterface {
             } 
         });
 
-        zoom(1);
+        zoom(0.75);
+        //notice_collisions with virus
+        //remove 
     }
-    void start() {}
+
+
+    void start() {
+
+    }
+
+    
     void update() {
         double fx;
         if ( RIGHT ) {
@@ -53,30 +61,44 @@ class PlayerController : public Process, public AgentInterface {
         }
         fx = -K_X*(velocity().x-vx);
 
-        if ( firing ) {
-            prevent_rotation();
+        if ( firing ) {//holding the "fire" button to sustain shooting is a lot more desireable than continual pressing
             Agent& bullet = add_agent("Bullet", 
-            x() + 17*cos(angle()), 
-            y() + 17*sin(angle()), 
+            x() - 17 + 17*cos(angle()), 
+            y() - 17 + 17*sin(angle()), 
             angle(), 
             BULLET_STYLE);  
             bullet.apply_force(200,0);
-        }
             
+            Agent& bullet2 = add_agent("Bullet", //added twin firing capabilities
+            x() + 17 + 17*cos(angle()), 
+            y() - 17 + 17*sin(angle()),
+            angle(), 
+            BULLET_STYLE);  
+            bullet2.apply_force(200,0);
+            
+        }
+/*
+        watch("none", [&](Event &e) {
+            emit(Event("goal_change", { 
+                { "x", e.value()["x"] }, 
+                { "y", e.value()["y"] } 
+            }));
+
+        });        
+*/              
 
         omni_apply_force(fx,f);
-        center(x(), y());
     }
     void stop() {}
 
     bool LEFT, RIGHT;
     double vx;
 
-    const double VEL_X = 40;
+    const double VEL_X = 100;
     const double K_X = 15;
 
     double f;
-    double const magnitude = 250;
+    double const magnitude = 700;
     bool firing;
     const json BULLET_STYLE = { 
                    {"fill", "green"}, 

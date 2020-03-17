@@ -17,27 +17,48 @@ class VirusController : public Process, public AgentInterface {
             Agent &host = find_agent(host_id);
             attach_to(host);
             host.set_style(INFECTED_HOST_STYLE);
-            ignore_collisions_with("Cell");
+            ignore_collisions_with("Virus");
             counter = 0;
-        });            
+        });
+/*
+        watch("player_position", [&](Event e) {
+
+            goal_x = e.value()["x"];
+            goal_y = e.value()["y"];
+
+        });
+*/        
     }
 
-    void start() {}
+    void start() {
+        track_velocity(5,0);
+    }
 
     void infect_host() {
         Agent& host = find_agent(host_id);
         for ( double theta = 0; theta < 2*M_PI; theta += M_PI/8 ) {
             Agent& v = add_agent("Virus", host.x() + 90*cos(theta), host.y() + 90*sin(theta), 0, VIRUS_STYLE);
+        /*
+            omni_apply_force(50,0
+                (rand() % fmax) - fmax/2, 
+                (rand() % fmax) - fmax/2
+        );
+        */
         }
         remove_agent(host_id);
         remove_agent(id());
     }
 
     void update() {
+       
         omni_apply_force(
             (rand() % fmax) - fmax/2, 
             (rand() % fmax) - fmax/2
         );
+
+
+        //omni_move_toward(goal_x, goal_y);
+
         if ( host_id >= 0 && counter++ == 100 ) {
             if ( agent_exists(host_id) ) {
                 infect_host();

@@ -1,6 +1,6 @@
 {
 
-    "name": "Virus Alert! Use a, d, w, s to move the robot. Spacebar to fire.",
+    "name": "Virus Alert! WASD to move the robot. Hold P to fire.",
     "ip": "0.0.0.0",
     "port": 8765,
 
@@ -9,12 +9,12 @@
         {
             "definition": "defs/player.json",
             "style": { "fill": "#555", "stroke": "#888", "strokeWidth": "5px", "strokeOpacity": "0.25"},
-            "position": { "x": 400, "y": 200, "theta": 4.71 }
+            "position": { "x": 0, "y": 200, "theta": 4.71 }
         },
         {
             "definition": "defs/bullet.json",
             "style": { "fill": "green", "stroke": "#888", "strokeWidth": "5px", "strokeOpacity": "0.25" },
-            "position": {"x": -400, "y": -200, "theta": 3.14 }
+            "position": {"x": -400, "y": -200, "theta": 0 }
         },
 
 
@@ -80,6 +80,34 @@
         
     ],
 
-    "statics": []
+    "statics": [
+        {
+            "style": { "fill": "gray", "stroke": "none" },
+            "shape": [
+                { "x": -600, "y": -1000 },
+                { "x": -600,  "y": 1000 },
+                { "x": -590,  "y": 1000 },
+                { "x": -590, "y": -1000 }
+            ]
+        },
+        {
+            "style": { "fill": "gray", "stroke": "none" },
+            "shape": [
+                { "x": 600, "y": -1000 },
+                { "x": 600,  "y": 1000 },
+                { "x": 590,  "y": 1000 },
+                { "x": 590, "y": -1000 }
+            ]
+        },
+        {
+            "style": { "fill": "gray", "stroke": "none" },
+            "shape": [
+                { "x": -600, "y": 1000 },
+                { "x": 600,  "y": 1000 },
+                { "x": 600,  "y": 990 },
+                { "x": -600, "y": 990 }
+            ]
+        }  
+    ]
 
 }
