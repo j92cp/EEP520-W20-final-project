@@ -40,8 +40,11 @@ class PlayerController : public Process, public AgentInterface {
         });
 
         zoom(0.75);
-        //notice_collisions with virus
-        //remove 
+
+        notice_collisions_with("Virus", [&](Event &e) {
+            remove_agent(id());
+        }); 
+
     }
 
 
@@ -49,7 +52,7 @@ class PlayerController : public Process, public AgentInterface {
 
     }
 
-    
+
     void update() {
         double fx;
         if ( RIGHT ) {
@@ -77,15 +80,11 @@ class PlayerController : public Process, public AgentInterface {
             bullet2.apply_force(200,0);
             
         }
-/*
-        watch("none", [&](Event &e) {
-            emit(Event("goal_change", { 
-                { "x", e.value()["x"] }, 
-                { "y", e.value()["y"] } 
-            }));
-
-        });        
-*/              
+        
+        emit(Event("player_position", { 
+            { "x", x() }, 
+            { "y", y() }    
+        }));            
 
         omni_apply_force(fx,f);
     }

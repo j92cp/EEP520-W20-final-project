@@ -15,10 +15,7 @@ class BulletController : public Process, public AgentInterface {
         notice_collisions_with("Virus", [&](Event &e) {
             remove_agent(e.value()["id"]);
             remove_agent(id());
-        });  
-        notice_collisions_with("Cell", [&](Event &e) {
-            remove_agent(id());
-        });               
+        });                 
     }
     void start() {}
     void update() {
