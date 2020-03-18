@@ -9,25 +9,23 @@ using namespace enviro;
 class VirusController : public Process, public AgentInterface {
 
     public:
-    VirusController() : Process(), AgentInterface(), pos_x(0), pos_y(0) {}
+    VirusController() : Process(), AgentInterface(){}
 
-    void init() {
-        watch("player_position", [&](Event& e) {
-            pos_x  = e.value()["x"];
-            pos_y  = e.value()["y"];
-        });
-    }
+    void init() {}
 
     void start() {}    
 
     void update() {
-        omni_move_toward(pos_x, pos_y, 0.1);
+        omni_apply_force(0,100);
+
+        if(y() > 1000 ) {
+            remove_agent(id());
+        }
     }
 
     void stop() {}
 
-    double pos_x, pos_y;
-
+    int speed;
 
 };
 

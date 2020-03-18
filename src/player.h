@@ -3,23 +3,24 @@
 
 #include "enviro.h"
 
+
 using namespace enviro;
 
 class PlayerController : public Process, public AgentInterface {
 
     public:
-    PlayerController() : Process(), AgentInterface(), f(0), LEFT(false), RIGHT(false), firing(false) {}
+    PlayerController() : Process(), AgentInterface(), f(0), LEFT(false), RIGHT(false), firing(false), points(0) {}
 
     void init() {
         prevent_rotation();
         watch("keydown", [&](Event &e) {
             auto k = e.value()["key"].get<std::string>();
             if ( k == "p" && !firing ) {
-                firing = true;
+                firing = true;            
             } else if ( k == "w" ) {
                   f = -magnitude;              
             } else if ( k == "s" ) {
-                  f = magnitude;  
+                  f = magnitude;
             } else if ( k == "a" ) {//instead of rotation, the player agent moves laterally
                   LEFT = true;
             } else if ( k == "d" ) {//this movement was refactored from the platformer example
@@ -30,8 +31,10 @@ class PlayerController : public Process, public AgentInterface {
             auto k = e.value()["key"].get<std::string>();
             if ( k == "p" ) {
                 firing = false;
+            
             } else if ( k == "w" || k == "s" ) {
-                  f = 0;               
+                  f = 0;
+                          
             } else if ( k == "a" ) {
                   LEFT = false;
             } else if ( k == "d" ) {
@@ -39,12 +42,15 @@ class PlayerController : public Process, public AgentInterface {
             } 
         });
 
-        zoom(0.75);
+        zoom(1);
 
         notice_collisions_with("Virus", [&](Event &e) {
             remove_agent(id());
         }); 
 
+        notice_collisions_with("Virus2", [&](Event &e) {
+            remove_agent(id());
+        });
     }
 
 
@@ -79,19 +85,19 @@ class PlayerController : public Process, public AgentInterface {
             BULLET_STYLE);  
             bullet2.apply_force(200,0);
             
-        }
-        
-        emit(Event("player_position", { 
-            { "x", x() }, 
-            { "y", y() }    
-        }));            
+        }    
 
         omni_apply_force(fx,f);
+        watch("point", [&](Event &e) {
+            label(std::to_string((int) points++),20,20);  
+        });
+        
     }
     void stop() {}
 
     bool LEFT, RIGHT;
     double vx;
+    int points;
 
     const double VEL_X = 100;
     const double K_X = 15;
@@ -100,7 +106,7 @@ class PlayerController : public Process, public AgentInterface {
     double const magnitude = 700;
     bool firing;
     const json BULLET_STYLE = { 
-                   {"fill", "green"}, 
+                   {"fill", "white"}, 
                    {"stroke", "#888"}, 
                    {"strokeWidth", "5px"},
                    {"strokeOpacity", "0.25"}

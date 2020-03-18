@@ -8,13 +8,20 @@ using namespace enviro;
 class BulletController : public Process, public AgentInterface {
 
     public:
-    BulletController() : Process(), AgentInterface(), counter(0) {}
+    BulletController() : Process(), AgentInterface(), counter(0), points(0) {}
 
     void init() {
         void prevent_rotation();
         notice_collisions_with("Virus", [&](Event &e) {
             remove_agent(e.value()["id"]);
             remove_agent(id());
+            emit(Event ("point"));
+        });
+
+        notice_collisions_with("Virus2", [&](Event &e) {
+            remove_agent(e.value()["id"]);
+            remove_agent(id());
+            emit(Event ("point"));
         });                 
     }
     void start() {}
@@ -26,6 +33,7 @@ class BulletController : public Process, public AgentInterface {
     void stop() {}
 
     double counter;
+    int points;
 
 };
 
