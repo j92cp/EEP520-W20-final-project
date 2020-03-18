@@ -2,6 +2,7 @@
 #define __PLAYER_AGENT__H 
 
 #include "enviro.h"
+#include <iostream>
 
 
 using namespace enviro;
@@ -9,14 +10,18 @@ using namespace enviro;
 class PlayerController : public Process, public AgentInterface {
 
     public:
-    PlayerController() : Process(), AgentInterface(), f(0), LEFT(false), RIGHT(false), firing(false), points(0) {}
+    PlayerController() : Process(), AgentInterface(), f(0), LEFT(false), RIGHT(false), firing(false), firing2(false) {}
 
     void init() {
+        
         prevent_rotation();
         watch("keydown", [&](Event &e) {
             auto k = e.value()["key"].get<std::string>();
             if ( k == "p" && !firing ) {
-                firing = true;            
+                firing = true;
+            } else if ( k == "o" && !firing2 ) {
+                firing2 = true;
+                emit(Event ("drain"));            
             } else if ( k == "w" ) {
                   f = -magnitude;              
             } else if ( k == "s" ) {
@@ -30,11 +35,11 @@ class PlayerController : public Process, public AgentInterface {
         watch("keyup", [&](Event &e) {
             auto k = e.value()["key"].get<std::string>();
             if ( k == "p" ) {
-                firing = false;
-            
+                firing = false; 
+            } else if ( k == "o" ) {
+                firing2 = false; 
             } else if ( k == "w" || k == "s" ) {
-                  f = 0;
-                          
+                  f = 0;              
             } else if ( k == "a" ) {
                   LEFT = false;
             } else if ( k == "d" ) {
@@ -85,31 +90,55 @@ class PlayerController : public Process, public AgentInterface {
             BULLET_STYLE);  
             bullet2.apply_force(200,0);
             
-        }    
+        }
+
+        if ( firing2 && charge >= 0 ) {//secondary fire
+            Agent& star = add_agent("Star", 
+            x() + 17*cos(angle()), 
+            y() + 17*sin(angle()), 
+            angle(), 
+            STAR_STYLE);  
+            star.apply_force(400,0);
+            charge -= 20;
+        } else if (charge <= charge_max) {
+            charge += 1;
+        }
 
         omni_apply_force(fx,f);
+        label("score: " + std::to_string( (int) points ) + 
+              "charge: " + std::to_string( (int) charge ),20,0);
+
         watch("point", [&](Event &e) {
-            label(std::to_string((int) points++),20,20);  
+            points++;         
         });
-        
+
     }
     void stop() {}
 
     bool LEFT, RIGHT;
     double vx;
     int points;
+    int charge = 100;
+    int charge_max = 100;
+
 
     const double VEL_X = 100;
     const double K_X = 15;
 
     double f;
     double const magnitude = 700;
-    bool firing;
+    bool firing, firing2;
     const json BULLET_STYLE = { 
                    {"fill", "white"}, 
                    {"stroke", "#888"}, 
                    {"strokeWidth", "5px"},
                    {"strokeOpacity", "0.25"}
+               };
+    const json STAR_STYLE = { 
+                   {"fill", "gold"}, 
+                   {"stroke", "#888"}, 
+                   {"strokeWidth", "5px"},
+                   {"strokeOpacity", "0.1"}
                };
 
 };

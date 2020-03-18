@@ -8,7 +8,7 @@ using namespace enviro;
 class BulletController : public Process, public AgentInterface {
 
     public:
-    BulletController() : Process(), AgentInterface(), counter(0), points(0) {}
+    BulletController() : Process(), AgentInterface(), counter(0) {}
 
     void init() {
         void prevent_rotation();
@@ -33,7 +33,6 @@ class BulletController : public Process, public AgentInterface {
     void stop() {}
 
     double counter;
-    int points;
 
 };
 

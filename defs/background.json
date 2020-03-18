@@ -3,10 +3,10 @@
     "type": "noninteractive",
     "description": "Replace this string with a description",
     "shape": [
-        { "x": -10000, "y": 10000 },
-        { "x": 10000, "y": 10000 },
-        { "x": 10000, "y": -10000 },
-        { "x": -10000, "y": -10000 }
+        { "x": -600, "y": 10000 },
+        { "x": 600, "y": 10000 },
+        { "x": 600, "y": -10000 },
+        { "x": -600, "y": -10000 }
     ],
     "friction": {
       "collision": 5,
