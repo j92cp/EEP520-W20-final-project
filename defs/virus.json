@@ -5,7 +5,7 @@
     "shape": "omni",
     "radius": 10,
     "friction": {
-      "collision": 1,
+      "collision": 0,
       "linear": 10,
       "rotational": 600
     },

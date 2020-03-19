@@ -15,14 +15,13 @@ class PlayerController : public Process, public AgentInterface {
     void init() {
         
         prevent_rotation();
-        watch("keydown", [&](Event &e) {
+        watch("keydown", [&](Event &e) {//the keystroke mechanics are refactored from the virus examples
             auto k = e.value()["key"].get<std::string>();
             if ( k == "p" && !firing ) {
                 firing = true;
             } else if ( k == "o" && !firing2 ) {
-                firing2 = true;
-                emit(Event ("drain"));            
-            } else if ( k == "w" ) {
+                firing2 = true;            
+            } else if ( k == "w" ) {//I was hoping to change the controls to the arrow keys for better handling, but could not due to time constraints.
                   f = -magnitude;              
             } else if ( k == "s" ) {
                   f = magnitude;
@@ -49,11 +48,11 @@ class PlayerController : public Process, public AgentInterface {
 
         zoom(1);
 
-        notice_collisions_with("Virus", [&](Event &e) {
+        notice_collisions_with("Virus", [&](Event &e) {//these are death mechanics for the player
             remove_agent(id());
         }); 
 
-        notice_collisions_with("Virus2", [&](Event &e) {
+        notice_collisions_with("Virus2", [&](Event &e) {//coming into contact with enemies calls a remove function
             remove_agent(id());
         });
     }
@@ -92,7 +91,7 @@ class PlayerController : public Process, public AgentInterface {
             
         }
 
-        if ( firing2 && charge >= 0 ) {//secondary fire
+        if ( firing2 && charge >= 0 ) {//secondary fire with a cooldown mechanism. Sustained fire is only possible with enough "charge"
             Agent& star = add_agent("Star", 
             x() + 17*cos(angle()), 
             y() + 17*sin(angle()), 
@@ -100,15 +99,16 @@ class PlayerController : public Process, public AgentInterface {
             STAR_STYLE);  
             star.apply_force(400,0);
             charge -= 20;
-        } else if (charge <= charge_max) {
+        } else if (charge <= charge_max) {//charge caps out at 200 units and features a cooldown timer
             charge += 1;
         }
 
         omni_apply_force(fx,f);
-        label("score: " + std::to_string( (int) points ) + 
-              "charge: " + std::to_string( (int) charge ),20,0);
 
-        watch("point", [&](Event &e) {
+        label("score: " + std::to_string( (int) points ) + //displays points earned
+              "charge: " + std::to_string( (int) charge ),20,0); //displays charge level for secondary fire
+
+        watch("point", [&](Event &e) {//watches for point events emitted by collisions between "bullet" and "virus" agents
             points++;         
         });
 
@@ -118,8 +118,8 @@ class PlayerController : public Process, public AgentInterface {
     bool LEFT, RIGHT;
     double vx;
     int points;
-    int charge = 100;
-    int charge_max = 100;
+    int charge = 199;
+    int charge_max = 199;
 
 
     const double VEL_X = 100;

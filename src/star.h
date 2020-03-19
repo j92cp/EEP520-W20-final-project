@@ -3,6 +3,8 @@
 
 #include "enviro.h"
 
+//agent build for secondary fire
+
 using namespace enviro;
 
 class starController : public Process, public AgentInterface {
@@ -14,12 +16,15 @@ class starController : public Process, public AgentInterface {
         void prevent_rotation();
         notice_collisions_with("Virus", [&](Event &e) {
             remove_agent(e.value()["id"]);
-            remove_agent(id());
+            //here would be a remove_agent(id())
+            //to remove the star agent on collision with Virus
+            //However, in hopes of introducing an overpenetrating bullet, it was removed
+            //sadly, this didn't lead the star agent having such capabilities
         });
 
         notice_collisions_with("Virus2", [&](Event &e) {
             remove_agent(e.value()["id"]);
-            remove_agent(id());
+            
         });                 
     }
     void start() {}

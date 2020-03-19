@@ -1,6 +1,6 @@
 {
 
-    "name": "Enemy incoming! WASD to move the robot. Hold P to fire. Aim for a high score!",
+    "name": "Enemy incoming! WASD to move. Hold P to fire. Hold O and P together for augmented fire. Aim for a high score!",
     "ip": "0.0.0.0",
     "port": 8765,
 
